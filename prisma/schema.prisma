@@ -1,0 +1,195 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  REGISTRAR
+  TRAINER
+  STUDENT
+}
+
+enum ApplicantStatus {
+  NEW
+  SCREENING
+  OFFERED
+  ACCEPTED
+  REJECTED
+  CONVERTED
+}
+
+enum EnrolmentStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+  WITHDRAWN
+  DEFERRED
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  EXCUSED
+}
+
+enum ResultOutcome {
+  PASS
+  FAIL
+  PENDING
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         Role     @default(STUDENT)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  student      Student?
+  auditLogs    AuditLog[]
+}
+
+model Programme {
+  id             String  @id @default(cuid())
+  code           String  @unique
+  title          String
+  category       String
+  ncqfLevel      Int?
+  durationLabel  String
+  description    String?
+  prerequisiteId String?
+  createdAt      DateTime @default(now())
+
+  prerequisite Programme?  @relation("Prereq", fields: [prerequisiteId], references: [id])
+  dependents   Programme[] @relation("Prereq")
+  cohorts      Cohort[]
+  enrolments   Enrolment[]
+}
+
+model Cohort {
+  id          String   @id @default(cuid())
+  programmeId String
+  code        String   @unique
+  startDate   DateTime
+  endDate     DateTime
+  capacity    Int      @default(30)
+  trainerId   String?
+  createdAt   DateTime @default(now())
+
+  programme  Programme   @relation(fields: [programmeId], references: [id])
+  enrolments Enrolment[]
+  sessions   Session[]
+}
+
+model Student {
+  id        String   @id @default(cuid())
+  userId    String?  @unique
+  studentNo String   @unique
+  firstName String
+  lastName  String
+  idNumber  String?  @unique
+  dob       DateTime?
+  phone     String?
+  email     String?
+  address   String?
+  createdAt DateTime @default(now())
+
+  user       User?       @relation(fields: [userId], references: [id])
+  enrolments Enrolment[]
+  documents  Document[]
+}
+
+model Applicant {
+  id                 String          @id @default(cuid())
+  firstName          String
+  lastName           String
+  email              String
+  phone              String?
+  programmeId        String?
+  status             ApplicantStatus @default(NEW)
+  notes              String?
+  convertedStudentId String?         @unique
+  createdAt          DateTime        @default(now())
+}
+
+model Enrolment {
+  id          String          @id @default(cuid())
+  studentId   String
+  cohortId    String
+  programmeId String
+  status      EnrolmentStatus @default(PENDING)
+  enrolledAt  DateTime        @default(now())
+
+  student   Student    @relation(fields: [studentId], references: [id])
+  cohort    Cohort     @relation(fields: [cohortId], references: [id])
+  programme Programme  @relation(fields: [programmeId], references: [id])
+  results      Result[]
+  attendances  Attendance[]
+
+  @@unique([studentId, cohortId])
+}
+
+model Session {
+  id       String   @id @default(cuid())
+  cohortId String
+  date     DateTime
+  topic    String?
+
+  cohort      Cohort       @relation(fields: [cohortId], references: [id])
+  attendances Attendance[]
+}
+
+model Attendance {
+  id          String           @id @default(cuid())
+  sessionId   String
+  enrolmentId String
+  status      AttendanceStatus
+  markedAt    DateTime         @default(now())
+
+  session   Session   @relation(fields: [sessionId], references: [id])
+  enrolment Enrolment @relation(fields: [enrolmentId], references: [id])
+
+  @@unique([sessionId, enrolmentId])
+}
+
+model Result {
+  id          String        @id @default(cuid())
+  enrolmentId String
+  mark        Int?
+  outcome     ResultOutcome @default(PENDING)
+  assessedBy  String?
+  assessedAt  DateTime?
+  moderated   Boolean       @default(false)
+
+  enrolment Enrolment @relation(fields: [enrolmentId], references: [id])
+}
+
+model Document {
+  id         String   @id @default(cuid())
+  studentId  String
+  type       String
+  url        String
+  uploadedAt DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  entity    String
+  entityId  String
+  before    Json?
+  after     Json?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+}
