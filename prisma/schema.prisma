@@ -161,7 +161,7 @@ model Attendance {
 
 model Result {
   id          String        @id @default(cuid())
-  enrolmentId String
+  enrolmentId String  @unique
   mark        Int?
   outcome     ResultOutcome @default(PENDING)
   assessedBy  String?

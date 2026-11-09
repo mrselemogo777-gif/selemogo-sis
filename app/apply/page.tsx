@@ -25,7 +25,7 @@ export default async function ApplyPage({
     <main className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-2xl mx-auto">
         <div className="bg-white border rounded-lg p-8">
-          <h1 className="text-3xl font-bold">Apply to Granjo</h1>
+          <h1 className="text-3xl font-bold">Apply to Selemogo SIS</h1>
           <p className="text-gray-500 mt-2 mb-6">
             Complete this form to start your application. Our front desk will contact you.
           </p>

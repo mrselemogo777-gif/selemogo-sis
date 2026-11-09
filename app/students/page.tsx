@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/prisma'
 import { requirePermission } from '@/lib/rbac'
 import Link from 'next/link'
+import { AppShell } from '@/components/app-shell'
+import { Topbar } from '@/components/topbar'
 
 export const instant = false
 
@@ -14,56 +16,41 @@ export default async function StudentsPage() {
   })
 
   return (
-    <main className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-3xl font-bold">Students</h1>
-            <p className="text-gray-500 mt-1">{students.length} total</p>
-          </div>
-          <Link href="/dashboard" className="text-sm text-gray-500 hover:text-gray-900">
-            ← Dashboard
-          </Link>
-        </div>
-
+    <AppShell>
+      <Topbar title="Students" subtitle="Selemogo SIS" />
+      <main className="p-8">
         {students.length === 0 ? (
-          <div className="bg-white border rounded-lg p-12 text-center">
-            <p className="text-gray-500">No students yet.</p>
-            <p className="text-gray-400 text-sm mt-1">
-              Convert an applicant to create the first student record.
-            </p>
-            <Link
-              href="/applicants"
-              className="inline-block mt-4 text-blue-600 hover:underline text-sm"
-            >
-              Go to Applicants →
+          <div className="bg-white border border-[var(--color-border)] rounded-lg p-12 text-center">
+            <p className="text-[var(--color-text-secondary)]">No students yet.</p>
+            <Link href="/applicants" className="inline-block mt-4 text-[var(--color-accent)] hover:underline text-sm">
+              Convert an applicant to get started →
             </Link>
           </div>
         ) : (
-          <div className="bg-white border rounded-lg overflow-hidden">
+          <div className="bg-white border border-[var(--color-border)] rounded-lg overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-gray-100 border-b">
+              <thead className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
                 <tr>
-                  <th className="text-left p-3 font-semibold">Student No.</th>
-                  <th className="text-left p-3 font-semibold">Name</th>
-                  <th className="text-left p-3 font-semibold">Email</th>
-                  <th className="text-left p-3 font-semibold">Phone</th>
-                  <th className="text-left p-3 font-semibold">Enrolments</th>
-                  <th className="text-left p-3 font-semibold"></th>
+                  <th className="text-left px-4 py-3 text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)]">Student No.</th>
+                  <th className="text-left px-4 py-3 text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)]">Name</th>
+                  <th className="text-left px-4 py-3 text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)]">Email</th>
+                  <th className="text-left px-4 py-3 text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)]">Phone</th>
+                  <th className="text-left px-4 py-3 text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)]">Enrolments</th>
+                  <th className="px-4 py-3"></th>
                 </tr>
               </thead>
               <tbody>
                 {students.map(s => (
-                  <tr key={s.id} className="border-b hover:bg-gray-50">
-                    <td className="p-3 font-mono text-xs">{s.studentNo}</td>
-                    <td className="p-3">
-                      {s.firstName} {s.lastName}
-                    </td>
-                    <td className="p-3 text-xs">{s.email ?? '—'}</td>
-                    <td className="p-3 text-xs">{s.phone ?? '—'}</td>
-                    <td className="p-3 text-xs">{s._count.enrolments}</td>
-                    <td className="p-3">
-                      <span className="text-gray-400 text-xs">detail page next phase</span>
+                  <tr key={s.id} className="border-b border-[var(--color-border)] last:border-0 hover:bg-[var(--color-surface)] transition-colors">
+                    <td className="px-4 py-3 font-mono text-xs tabular">{s.studentNo}</td>
+                    <td className="px-4 py-3 font-semibold">{s.firstName} {s.lastName}</td>
+                    <td className="px-4 py-3 text-xs text-[var(--color-text-secondary)]">{s.email ?? '—'}</td>
+                    <td className="px-4 py-3 text-xs text-[var(--color-text-secondary)]">{s.phone ?? '—'}</td>
+                    <td className="px-4 py-3 text-xs tabular">{s._count.enrolments}</td>
+                    <td className="px-4 py-3 text-right">
+                      <Link href={`/students/${s.id}`} className="text-xs text-[var(--color-accent)] hover:underline font-medium">
+                        View →
+                      </Link>
                     </td>
                   </tr>
                 ))}
@@ -71,7 +58,7 @@ export default async function StudentsPage() {
             </table>
           </div>
         )}
-      </div>
-    </main>
+      </main>
+    </AppShell>
   )
 }

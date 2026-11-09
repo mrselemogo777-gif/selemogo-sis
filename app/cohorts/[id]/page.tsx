@@ -34,7 +34,6 @@ export default async function CohortDetailPage({
 
   if (!cohort) notFound()
 
-  // Find students not yet enrolled in this cohort
   const enrolledStudentIds = cohort.enrolments.map(e => e.studentId)
   const availableStudents = await prisma.student.findMany({
     where: { id: { notIn: enrolledStudentIds } },
@@ -63,9 +62,17 @@ export default async function CohortDetailPage({
               {cohort.startDate.toLocaleDateString()} → {cohort.endDate.toLocaleDateString()} · Capacity: {cohort.enrolments.length}/{cohort.capacity}
             </p>
           </div>
-          <Link href="/cohorts" className="text-sm text-gray-500 hover:text-gray-900">
-            ← Cohorts
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href={`/cohorts/${cohort.id}/results`}
+              className="text-sm bg-black text-white px-3 py-2 rounded hover:bg-gray-800"
+            >
+              Capture Results
+            </Link>
+            <Link href="/cohorts" className="text-sm text-gray-500 hover:text-gray-900">
+              ← Cohorts
+            </Link>
+          </div>
         </div>
 
         {query.enrolled && (

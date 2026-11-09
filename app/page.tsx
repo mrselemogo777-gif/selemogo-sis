@@ -15,7 +15,7 @@ export default async function Home() {
     <main className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-4xl mx-auto">
         <div className="bg-white border rounded-lg p-8">
-          <h1 className="text-4xl font-bold mb-2">Granjo SIS</h1>
+          <h1 className="text-4xl font-bold mb-2">Selemogo Student Information System</h1>
           <p className="text-gray-500 mb-8">Student Records & Enrolment Management — Prototype</p>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -47,7 +47,7 @@ export default async function Home() {
           </div>
 
           <p className="text-xs text-gray-400 mt-8">
-            Demo prototype — not affiliated with Granjo. Built as a portfolio project.
+            Selemogo Student Information System — independent prototype. Uses Granjo's public course catalogue as demo data. Not affiliated with Granjo.
           </p>
         </div>
       </div>
