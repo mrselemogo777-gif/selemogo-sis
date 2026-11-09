@@ -17,6 +17,8 @@
   --color-text-primary: #0F172A;
   --color-text-secondary: #64748B;
   --color-text-muted: #94A3B8;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
 }
 
 * {
@@ -27,21 +29,24 @@
 body {
   background-color: var(--color-surface);
   color: var(--color-text-primary);
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  font-family: var(--font-sans);
 }
 
-/* Tabular numerals for IDs, marks, counts */
 .tabular {
   font-variant-numeric: tabular-nums;
 }
 
-/* Custom focus ring for keyboard navigation */
+.font-mono,
+code,
+pre {
+  font-family: var(--font-mono);
+}
+
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
-/* Print styles */
 @media print {
   body {
     background: white;
@@ -51,7 +56,6 @@ body {
   }
 }
 
-/* Smooth scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
