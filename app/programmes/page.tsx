@@ -1,3 +1,5 @@
+export const instant = false
+
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 
