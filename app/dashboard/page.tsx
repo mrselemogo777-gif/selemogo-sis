@@ -1,14 +1,14 @@
 import { Suspense } from 'react'
-import { connection } from 'next/server'
 import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { AppShell } from '@/components/app-shell'
 import { Topbar } from '@/components/topbar'
+export const instant = false
+
 
 async function DashboardData() {
-  await connection()
   const session = await getSession()
   if (!session) redirect('/login')
 
